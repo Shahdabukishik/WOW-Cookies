@@ -18,8 +18,6 @@ const navItems: Array<{ label: string; page: PageId }> = [
   { label: 'تسجيل الدخول', page: 'login' },
 ]
 
-const categoryOptions: StorefrontProduct['category'][] = ['كوكيز', 'بوكسات', 'مشروبات']
-
 function Header({
   currentPage,
   cartCount,
@@ -320,6 +318,31 @@ function ProductGridSection({
   )
 }
 
+function EmptyCollectionState({
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: {
+  title: string
+  description: string
+  actionLabel?: string
+  onAction?: () => void
+}) {
+  return (
+    <div className="glass-card empty-collection-card">
+      <p className="section-kicker">لا يوجد محتوى حالياً</p>
+      <h3>{title}</h3>
+      <p>{description}</p>
+      {actionLabel && onAction ? (
+        <button className="primary-pill small" onClick={onAction}>
+          {actionLabel}
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
 function HomePage({
   offers,
   products,
@@ -334,30 +357,63 @@ function HomePage({
   const featuredProduct = products.find((product) => product.flags.featured) ?? products[0]
   const topRated = products.filter((product) => product.flags.topRated)
   const mostSelling = products.filter((product) => product.flags.mostSelling)
+  const homeSections = [
+    {
+      key: 'top-rated',
+      eyebrow: 'الأعلى تقييماً',
+      title: 'منتجات تستحق الواجهة الأمامية لأنها الأقوى في الانطباع والجودة',
+      description:
+        'هذا القسم مناسب لإبراز المنتجات التي تملك أفضل تفاعل أو أفضل حضور بصري، مع مساحة كبيرة للصورة والتفاصيل.',
+      accentLabel: 'الأعلى تقييماً',
+      items: topRated.length > 0 ? topRated : products.slice(0, 3),
+    },
+    {
+      key: 'most-selling',
+      eyebrow: 'الأكثر مبيعاً',
+      title: 'خيارات محبوبة يطلبها العملاء باستمرار وتدفع الزائر للشراء بسرعة',
+      description:
+        'اعرض المنتجات الأكثر مبيعاً بشكل تحريري واضح يساعد على إبراز الصورة والسعر والوصف المختصر بطريقة مقنعة.',
+      accentLabel: 'الأكثر مبيعاً',
+      items: mostSelling.length > 0 ? mostSelling : products.slice(0, 3),
+    },
+  ]
 
-  if (!featuredProduct) return null
+  if (!featuredProduct) {
+    return (
+      <>
+        <IntroSection />
+        <section className="section-block">
+          <div className="wow-container">
+            <EmptyCollectionState
+              title="لم يتم تحميل منتجات بعد"
+              description="أضف منتجات فعالة داخل Supabase مع الاسم والسعر والصورة والوصف، وبعدها ستظهر الصفحة الرئيسية تلقائياً في أماكنها المناسبة."
+              actionLabel="اذهب للمنتجات"
+              onAction={() => onNavigate('products')}
+            />
+          </div>
+        </section>
+      </>
+    )
+  }
 
   return (
     <>
       <Hero featuredProduct={featuredProduct} onBrowse={() => onNavigate('products')} />
       <IntroSection />
       <OffersSection offers={offers} />
-      <ShowcaseSection
-        eyebrow="الأعلى تقييماً"
-        title="منتجات تستحق الواجهة الأمامية لأنها الأقوى في الانطباع والجودة"
-        description="هذا القسم مناسب لإبراز المنتجات التي تملك أفضل تفاعل أو أفضل حضور بصري، مع مساحة كبيرة للصورة والتفاصيل."
-        items={topRated.length > 0 ? topRated : products.slice(0, 3)}
-        accentLabel="الأعلى تقييماً"
-        onAddToCart={onAddToCart}
-      />
-      <ShowcaseSection
-        eyebrow="الأكثر مبيعاً"
-        title="خيارات محبوبة يطلبها العملاء باستمرار وتدفع الزائر للشراء بسرعة"
-        description="اعرض المنتجات الأكثر مبيعاً بشكل تحريري واضح يساعد على إبراز الصورة والسعر والوصف المختصر بطريقة مقنعة."
-        items={mostSelling.length > 0 ? mostSelling : products.slice(0, 3)}
-        accentLabel="الأكثر مبيعاً"
-        onAddToCart={onAddToCart}
-      />
+      {homeSections
+        .filter((section) => section.items.length > 0)
+        .map((section) => (
+          <ShowcaseSection
+            key={section.key}
+            eyebrow={section.eyebrow}
+            title={section.title}
+            description={section.description}
+            items={section.items}
+            accentLabel={section.accentLabel}
+            onAddToCart={onAddToCart}
+          />
+        ))}
       <ProductGridSection
         title="التشكيلة الكاملة في شبكة مرنة وواضحة"
         description="بعد عرض العروض والمنتجات البارزة، يصل الزائر إلى جميع المنتجات في شكل منظم وسهل للربط مستقبلاً مع قاعدة البيانات."
@@ -379,6 +435,10 @@ function ProductsPage({
   const [sortOrder, setSortOrder] = useState<'price-asc' | 'price-desc'>('price-asc')
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const categoryOptions = useMemo(
+    () => [...new Set(products.map((product) => product.category))],
+    [products],
+  )
 
   const visibleProducts = useMemo(() => {
     const filtered =
@@ -390,6 +450,7 @@ function ProductsPage({
       sortOrder === 'price-asc' ? first.price - second.price : second.price - first.price,
     )
   }, [products, selectedCategories, sortOrder])
+  const activeFilterCount = selectedCategories.length + (sortOrder === 'price-desc' ? 1 : 0)
 
   const toggleCategory = (category: StorefrontProduct['category']) => {
     setSelectedCategories((current) =>
@@ -403,7 +464,10 @@ function ProductsPage({
     setExpandedProductId((current) => (current === productId ? null : productId))
   }
 
-  const featuredProducts = products.slice(0, 3)
+  const featuredProducts =
+    products.filter((product) => product.flags.featured).slice(0, 3).length > 0
+      ? products.filter((product) => product.flags.featured).slice(0, 3)
+      : products.slice(0, 3)
 
   return (
     <main className="page-shell">
@@ -458,7 +522,7 @@ function ProductsPage({
         <div className="wow-container products-layout">
           <aside className={`glass-card filters-panel ${filtersOpen ? 'is-open' : ''}`}>
             <button className="filters-toggle" onClick={() => setFiltersOpen((current) => !current)} aria-expanded={filtersOpen}>
-              <span>الفلاتر</span>
+              <span>الفلاتر {activeFilterCount > 0 ? `(${activeFilterCount})` : ''}</span>
               <strong>{filtersOpen ? '−' : '+'}</strong>
             </button>
 
@@ -497,7 +561,7 @@ function ProductsPage({
                   <div className="sort-arrow-group">
                     <button
                       type="button"
-                      className={`sort-arrow-button ${sortOrder === 'price-asc' ? 'active' : ''}`}
+                    className={`sort-arrow-button ${sortOrder === 'price-asc' ? 'active' : ''}`}
                       onClick={() => setSortOrder('price-asc')}
                       aria-label="ترتيب السعر من الأقل إلى الأعلى"
                     >
@@ -522,59 +586,73 @@ function ProductsPage({
               <div>
                 <p className="section-kicker">كل المنتجات</p>
                 <h2>واجهة عرض المنتجات</h2>
+                <p className="products-subhead">المنتجات المعروضة هنا تتغير مباشرة بحسب البيانات والفلاتر القادمة من backend.</p>
               </div>
               <div className="products-count">
                 يتم عرض <strong>{visibleProducts.length}</strong> منتج
               </div>
             </div>
-            <div className="products-zigzag-list">
-              {visibleProducts.map((product, index) => (
-                <article
-                  key={product.id}
-                  className={`product-card product-zigzag-card ${index % 2 === 1 ? 'is-reversed' : ''} ${expandedProductId === product.id ? 'is-expanded' : ''}`}
-                  onClick={() => toggleProductCard(product.id)}
-                >
-                  <div className="product-image-wrap">
-                    {expandedProductId === product.id ? (
-                      <div className="product-description-panel">
-                        <span className="product-description-label">وصف المنتج</span>
-                        <p>{product.detailedDescription}</p>
-                      </div>
-                    ) : (
-                      <>
-                        <img src={product.imageUrl} alt={product.name} className="product-image" />
-                        <span className="product-floating-chip">{product.category}</span>
-                      </>
-                    )}
-                  </div>
-                  <div className="product-card-body">
-                    <p className="section-kicker">{product.category}</p>
-                    <h3>{product.name}</h3>
-                    <p className="product-short-copy">{product.shortDescription}</p>
-                    <p className="muted-copy">
-                      {expandedProductId === product.id
-                        ? 'اضغط مرة أخرى للعودة إلى الصورة.'
-                        : 'اضغط على البطاقة لعرض الوصف مكان الصورة.'}
-                    </p>
-                    <div className="product-card-footer">
-                      <div className="product-price-block">
-                        <span>السعر</span>
-                        <strong>{product.price} ريال</strong>
-                      </div>
-                      <button
-                        className="primary-pill small"
-                        onClick={(event) => {
-                          event.stopPropagation()
-                          onAddToCart(product)
-                        }}
-                      >
-                        أضف إلى السلة
-                      </button>
+            {visibleProducts.length === 0 ? (
+              <EmptyCollectionState
+                title="لا توجد منتجات مطابقة للفلاتر"
+                description="جرّب إزالة بعض الفلاتر أو أضف منتجات جديدة في قاعدة البيانات ضمن هذه الفئة."
+                actionLabel="إعادة ضبط"
+                onAction={() => {
+                  setSelectedCategories([])
+                  setSortOrder('price-asc')
+                  setExpandedProductId(null)
+                }}
+              />
+            ) : (
+              <div className="products-zigzag-list">
+                {visibleProducts.map((product, index) => (
+                  <article
+                    key={product.id}
+                    className={`product-card product-zigzag-card ${index % 2 === 1 ? 'is-reversed' : ''} ${expandedProductId === product.id ? 'is-expanded' : ''}`}
+                    onClick={() => toggleProductCard(product.id)}
+                  >
+                    <div className="product-image-wrap">
+                      {expandedProductId === product.id ? (
+                        <div className="product-description-panel">
+                          <span className="product-description-label">وصف المنتج</span>
+                          <p>{product.detailedDescription}</p>
+                        </div>
+                      ) : (
+                        <>
+                          <img src={product.imageUrl} alt={product.name} className="product-image" />
+                          <span className="product-floating-chip">{product.category}</span>
+                        </>
+                      )}
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    <div className="product-card-body">
+                      <p className="section-kicker">{product.category}</p>
+                      <h3>{product.name}</h3>
+                      <p className="product-short-copy">{product.shortDescription}</p>
+                      <p className="muted-copy">
+                        {expandedProductId === product.id
+                          ? 'اضغط مرة أخرى للعودة إلى الصورة.'
+                          : 'اضغط على البطاقة لعرض الوصف مكان الصورة.'}
+                      </p>
+                      <div className="product-card-footer">
+                        <div className="product-price-block">
+                          <span>السعر</span>
+                          <strong>{product.price} ريال</strong>
+                        </div>
+                        <button
+                          className="primary-pill small"
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            onAddToCart(product)
+                          }}
+                        >
+                          أضف إلى السلة
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
