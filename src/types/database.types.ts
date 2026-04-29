@@ -7,6 +7,7 @@ export type Product = {
   category: "cookie" | "drink" | "box"
   is_active: boolean
   created_at: string
+  Ingredients:string
 }
 
 export type CartItem = {
@@ -44,4 +45,13 @@ export type Interaction = {
   product_id: string
   type: "view" | "click"
   created_at: string
+}
+
+export type UserProfile = {
+  id: string
+  user_id: string | null
+  name: string | null
+  email: string | null
+  created_at: string
+  role: "user" | "admin"
 }
