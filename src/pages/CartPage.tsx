@@ -30,84 +30,170 @@ function CartPage({
     )
   }
 
-  return (
-    <main className="page-shell">
-      <section className="wow-container cart-hero">
-        <div>
-          <p className="section-kicker">سلة التسوق</p>
-          <h1 className="page-title">راجع طلبك قبل المتابعة للدفع</h1>
-          <p className="section-description">
-            عدّل الكميات أو احذف أي منتج، ثم تابع إلى تسجيل الدخول لإكمال الطلب.
-          </p>
-        </div>
-        <div className="glass-card cart-count-card">
+//   return (
+//     <main className="page-shell">
+//       <section className="wow-container cart-hero">
+//         <div>
+//           <p className="section-kicker">سلة التسوق</p>
+//           <h1 className="page-title">راجع طلبك قبل المتابعة للدفع</h1>
+//           <p className="section-description">
+//             عدّل الكميات أو احذف أي منتج، ثم تابع إلى تسجيل الدخول لإكمال الطلب.
+//           </p>
+//         </div>
+//         <div className="glass-card cart-count-card">
+//           <span>عدد الأصناف</span>
+//           <strong>{items.length}</strong>
+//         </div>
+//       </section>
+
+//       <section className="section-block">
+//         <div className="wow-container cart-layout">
+//           <div className="cart-items-column">
+//             {items.map((item) => (
+//               <article key={item.id} className="cart-item-card">
+//                 <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
+
+//                 <div className="cart-item-body">
+//                   <div className="row-between row-start">
+//                     <div>
+//                       <h3>{item.name}</h3>
+//                       <p>{item.shortDescription}</p>
+//                     </div>
+//                     <button className="danger-pill" onClick={() => onRemove(item.id)}>
+//                       إزالة
+//                     </button>
+//                   </div>
+
+//                   <div className="row-between wrap-row">
+//                     <div className="quantity-control">
+//                       <button onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>-</button>
+//                       <span>{item.quantity}</span>
+//                       <button onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>+</button>
+//                     </div>
+//                     <div className="cart-pricing">
+//                       <span>{item.price} ريال</span>
+//                       <strong>{item.price * item.quantity} ريال</strong>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </article>
+//             ))}
+//           </div>
+
+//           <aside className="glass-card cart-summary-card">
+//             <p className="section-kicker">الملخص</p>
+//             <h2>إجمالي الطلب</h2>
+
+//             <div className="summary-row">
+//               <span>المنتجات</span>
+//               <strong>{total} ريال</strong>
+//             </div>
+//             <div className="summary-row">
+//               <span>التوصيل</span>
+//               <strong>يحدد لاحقاً</strong>
+//             </div>
+//             <div className="summary-row">
+//               <span>الإجمالي</span>
+//               <strong>{total} ريال</strong>
+//             </div>
+
+//             <button className="primary-pill full-width" onClick={() => onNavigate('login')}>
+//               المتابعة للدفع
+//             </button>
+//             <button className="ghost-pill full-width" onClick={onClear}>
+//               إفراغ السلة
+//             </button>
+//           </aside>
+//         </div>
+//       </section>
+//     </main>
+//   )
+return (
+  <main className="cart-desktop-page">
+    <section className="cart-desktop-hero">
+      <div>
+        <p className="products-label">سلة التسوق</p>
+        <h1>
+          راجع <span>طلبك</span> قبل الدفع
+        </h1>
+        <p>
+          عدّل الكميات أو احذف المنتجات قبل إكمال الطلب.
+        </p>
+      </div>
+
+      <div className="cart-total-box">
+        <span>الإجمالي</span>
+        <strong>{total} ريال</strong>
+      </div>
+    </section>
+
+    <section className="cart-desktop-layout">
+      <div className="cart-products-list">
+        {items.map((item) => (
+          <article key={item.id} className="cart-desktop-card">
+            <img src={item.imageUrl} alt={item.name} />
+
+            <div className="cart-card-info">
+              <h3>{item.name}</h3>
+              <p>{item.shortDescription}</p>
+              <strong>{item.price} ريال</strong>
+
+              <div className="cart-card-actions">
+                <div className="quantity-pill">
+                  <button onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>-</button>
+                  <span>{item.quantity}</span>
+                  <button onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>+</button>
+                </div>
+
+                <button className="remove-btn" onClick={() => onRemove(item.id)}>
+                  إزالة
+                </button>
+              </div>
+            </div>
+
+            <div className="item-total">
+              <span>المجموع</span>
+              <strong>{item.price * item.quantity} ريال</strong>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <aside className="cart-summary-desktop">
+        <p className="products-label">الملخص</p>
+        <h2>إجمالي الطلب</h2>
+
+        <div className="summary-line">
           <span>عدد الأصناف</span>
           <strong>{items.length}</strong>
         </div>
-      </section>
 
-      <section className="section-block">
-        <div className="wow-container cart-layout">
-          <div className="cart-items-column">
-            {items.map((item) => (
-              <article key={item.id} className="cart-item-card">
-                <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
-
-                <div className="cart-item-body">
-                  <div className="row-between row-start">
-                    <div>
-                      <h3>{item.name}</h3>
-                      <p>{item.shortDescription}</p>
-                    </div>
-                    <button className="danger-pill" onClick={() => onRemove(item.id)}>
-                      إزالة
-                    </button>
-                  </div>
-
-                  <div className="row-between wrap-row">
-                    <div className="quantity-control">
-                      <button onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>-</button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>+</button>
-                    </div>
-                    <div className="cart-pricing">
-                      <span>{item.price} ريال</span>
-                      <strong>{item.price * item.quantity} ريال</strong>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <aside className="glass-card cart-summary-card">
-            <p className="section-kicker">الملخص</p>
-            <h2>إجمالي الطلب</h2>
-
-            <div className="summary-row">
-              <span>المنتجات</span>
-              <strong>{total} ريال</strong>
-            </div>
-            <div className="summary-row">
-              <span>التوصيل</span>
-              <strong>يحدد لاحقاً</strong>
-            </div>
-            <div className="summary-row">
-              <span>الإجمالي</span>
-              <strong>{total} ريال</strong>
-            </div>
-
-            <button className="primary-pill full-width" onClick={() => onNavigate('login')}>
-              المتابعة للدفع
-            </button>
-            <button className="ghost-pill full-width" onClick={onClear}>
-              إفراغ السلة
-            </button>
-          </aside>
+        <div className="summary-line">
+          <span>المنتجات</span>
+          <strong>{total} ريال</strong>
         </div>
-      </section>
-    </main>
-  )
+
+        <div className="summary-line">
+          <span>التوصيل</span>
+          <strong>يحدد لاحقاً</strong>
+        </div>
+
+        <div className="summary-line total-line">
+          <span>الإجمالي</span>
+          <strong>{total} ريال</strong>
+        </div>
+
+        <button className="checkout-btn" onClick={() => onNavigate('login')}>
+          المتابعة للدفع
+        </button>
+
+        <button className="clear-cart-btn" onClick={onClear}>
+          إفراغ السلة
+        </button>
+      </aside>
+    </section>
+  </main>
+)
 }
 
 export default CartPage

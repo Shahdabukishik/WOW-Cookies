@@ -12,6 +12,7 @@ import ProductsPage from './pages/ProductsPage'
 import CartPage from './pages/CartPage'
 import LoginPage from './pages/LoginPage'
 import SimplePage from './pages/SimplePage'
+import ProductDetailsPage from './pages/ProductDetailsPage'
 
 import {
   fetchStorefrontData,
@@ -28,6 +29,7 @@ function App() {
   const [offers, setOffers] = useState<StorefrontOffer[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<StorefrontProduct | null>(null)
 
   useEffect(() => {
     let isActive = true
@@ -90,6 +92,11 @@ function App() {
     )
   }
 
+  const openProductDetails = (product: StorefrontProduct) => {
+    setSelectedProduct(product)
+    setCurrentPage('product-details')
+  }
+
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
@@ -110,11 +117,24 @@ function App() {
           products={products}
           onNavigate={setCurrentPage}
           onAddToCart={addToCart}
+          onOpenProduct={openProductDetails}
         />
       )}
 
       {!loading && !error && currentPage === 'products' && (
-        <ProductsPage products={products} onAddToCart={addToCart} />
+        <ProductsPage
+          products={products}
+          onAddToCart={addToCart}
+          onOpenProduct={openProductDetails}
+        />
+      )}
+
+      {!loading && !error && currentPage === 'product-details' && selectedProduct && (
+        <ProductDetailsPage
+          product={selectedProduct}
+          onAddToCart={addToCart}
+          onNavigate={setCurrentPage}
+        />
       )}
 
       {!loading && !error && currentPage === 'cart' && (
@@ -127,7 +147,7 @@ function App() {
         />
       )}
 
-      {!loading && !error && currentPage === 'login' && <LoginPage />}
+      
 
       {!loading && !error && currentPage === 'offers' && (
         <SimplePage
