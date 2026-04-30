@@ -813,7 +813,7 @@
 .muted-copy {
   margin-top: 0.75rem;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
