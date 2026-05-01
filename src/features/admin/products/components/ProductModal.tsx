@@ -75,8 +75,20 @@ export const ProductModal = ({
 
                                 <label className="form-check form-switch">
                                     <input className="form-check-input" type="checkbox" checked={form.is_active} onChange={(e) => onChange({ target: { name: "is_active", value: e.target.checked } })} />
-                                   <label className="form-check-label" htmlFor="checkNativeSwitch">الحالة</label>
+                                    <label className="form-check-label" htmlFor="checkNativeSwitch">الحالة</label>
                                 </label>
+                                <label className="form-label">الفئة</label>
+                                <select
+                                    className="form-select mb-2"
+                                    name="category"
+                                    value={form.category}
+                                    onChange={onChange}
+                                >
+                                    <option value="">اختر التصنيف</option>
+                                    <option value="cookie">كوكيز</option>
+                                    <option value="drink">مشروب</option>
+                                    <option value="box">بوكس</option>
+                                </select>
                                 <label className="form-label">اسم المنتج</label>
                                 <input className="form-control mb-2" name="name" value={form.name} onChange={onChange} />
                                 <label className="form-label">السعر</label>

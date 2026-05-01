@@ -60,6 +60,69 @@ const fallbackOffers: StorefrontOffer[] = [
   },
 ]
 
+const fallbackProducts: StorefrontProduct[] = [
+  {
+    id: 'fallback-1',
+    name: 'كوكيز ريد فيلفت',
+    shortDescription: 'كوكيز ناعم بحشوة كريمية ولمسة غنية ملفتة.',
+    detailedDescription: 'قطعة كوكيز مخبوزة يومياً بطابع ريد فيلفت واضح، مناسبة للعرض كبطل بصري في الصفحة الرئيسية أو صفحة المنتجات.',
+    imageUrl: heroImage,
+    category: 'كوكيز',
+    price: 14,
+    flags: { topRated: true, mostSelling: true, featured: true },
+  },
+  {
+    id: 'fallback-2',
+    name: 'بوكس مشاركة فاخر',
+    shortDescription: 'بوكس مختار للمناسبات الصغيرة والمشاركة السريعة.',
+    detailedDescription: 'بوكس متوازن يجمع أكثر من نكهة في تقديم جاهز ومثالي للهدايا أو الطلبات العائلية والموسمية.',
+    imageUrl: heroImage,
+    category: 'بوكسات',
+    price: 36,
+    flags: { topRated: true, mostSelling: false, featured: false },
+  },
+  {
+    id: 'fallback-3',
+    name: 'آيس ماتشا لاتيه',
+    shortDescription: 'مشروب بارد خفيف يرافق الكوكيز بشكل مثالي.',
+    detailedDescription: 'مشروب منعش بنكهة ماتشا ناعمة، مناسب ليظهر ضمن المنتجات الموسمية أو العروض المركبة.',
+    imageUrl: heroImage,
+    category: 'مشروبات',
+    price: 12,
+    flags: { topRated: false, mostSelling: true, featured: false },
+  },
+  {
+    id: 'fallback-4',
+    name: 'كوكيز شوكولاتة تشيب',
+    shortDescription: 'الطعم الكلاسيكي المفضل بقطع شوكولاتة واضحة.',
+    detailedDescription: 'كوكيز كلاسيكي بسطح ذهبي وقطع شوكولاتة ظاهرة، مناسب لقسم الأكثر مبيعاً أو العرض الرئيسي.',
+    imageUrl: heroImage,
+    category: 'كوكيز',
+    price: 11,
+    flags: { topRated: false, mostSelling: true, featured: false },
+  },
+  {
+    id: 'fallback-5',
+    name: 'بوكس الاحتفال الصغير',
+    shortDescription: 'خيار أنيق للهدايا والطلبات السريعة.',
+    detailedDescription: 'بوكس مناسب للهدايا والمناسبات الخفيفة، ويعمل جيداً في الواجهة كخيار مرتب وواضح السعر.',
+    imageUrl: heroImage,
+    category: 'بوكسات',
+    price: 28,
+    flags: { topRated: true, mostSelling: false, featured: false },
+  },
+  {
+    id: 'fallback-6',
+    name: 'موكا بارد',
+    shortDescription: 'مشروب بارد غني يكمل تجربة الحلوى.',
+    detailedDescription: 'خيار مشروب غني بنكهة الموكا، مناسب لرفع متوسط قيمة الطلب داخل العروض أو المقترحات.',
+    imageUrl: heroImage,
+    category: 'مشروبات',
+    price: 13,
+    flags: { topRated: false, mostSelling: false, featured: false },
+  },
+]
+
 function getDescriptionParts(description: string | null) {
   const clean = description?.trim() || 'وصف المنتج سيظهر هنا بعد ربط البيانات من Supabase.'
   const firstSentence = clean.split(/[.!؟]/)[0]?.trim() || clean
@@ -192,22 +255,24 @@ export async function fetchStorefrontData(): Promise<StorefrontData> {
     }),
   )
 
-  if (mappedProducts.length > 0 && mappedProducts.every((product) => !product.flags.topRated)) {
-    mappedProducts.slice(0, 3).forEach((product) => {
+  const resolvedProducts = mappedProducts.length > 0 ? mappedProducts : fallbackProducts.map((product) => ({ ...product }))
+
+  if (resolvedProducts.length > 0 && resolvedProducts.every((product) => !product.flags.topRated)) {
+    resolvedProducts.slice(0, 3).forEach((product) => {
       product.flags.topRated = true
     })
   }
 
-  if (mappedProducts.length > 0 && mappedProducts.every((product) => !product.flags.mostSelling)) {
-    mappedProducts.slice(0, 3).forEach((product, index) => {
+  if (resolvedProducts.length > 0 && resolvedProducts.every((product) => !product.flags.mostSelling)) {
+    resolvedProducts.slice(0, 3).forEach((product, index) => {
       product.flags.mostSelling = index < 3
     })
   }
 
-  const offers = await fetchOffers(mappedProducts)
+  const offers = await fetchOffers(resolvedProducts)
 
   return {
-    products: mappedProducts,
+    products: resolvedProducts,
     offers,
   }
 }
