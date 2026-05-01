@@ -8,8 +8,6 @@ import EmptyCollectionState from "@/components/common/EmptyCollectionState"
 export default function ProductsPage({ onAddToCart }: any) {
   const { products, loading } = useProducts()
   const filters = useProductFilters(products)
-
-  const [expandedId, setExpandedId] = useState<string | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   return (
