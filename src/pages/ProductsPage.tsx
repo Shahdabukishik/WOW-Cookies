@@ -1,25 +1,24 @@
-import { useState } from "react"
 import { useProducts } from "@/hooks/useProducts"
 import { useProductFilters } from "@/features/products/useProductFilters"
 import { ProductCard } from "@/components/ProductCard"
-import { FiltersPanel } from "@/components/FiltersPanel"
+import { Filters } from "@/components/Filters"
 import EmptyCollectionState from "@/components/common/EmptyCollectionState"
 
 export default function ProductsPage({ onAddToCart }: any) {
   const { products, loading } = useProducts()
   const filters = useProductFilters(products)
-  const [filtersOpen, setFiltersOpen] = useState(false)
+
 
   return (
     <main className="page-shell">
       <section className="section-block">
         <div className="wow-container products-layout">
 
-          <FiltersPanel
-            filtersOpen={filtersOpen}
-            setFiltersOpen={setFiltersOpen}
+          <Filters
+           
+            
             selectedCategories={filters.selectedCategories}
-            categoryOptions={filters.categoryOptions}
+           
             sortOrder={filters.sortOrder}
             onToggleCategory={(c) =>
               filters.setSelectedCategories((prev) =>
@@ -27,7 +26,7 @@ export default function ProductsPage({ onAddToCart }: any) {
               )
             }
             onSortChange={filters.setSortOrder}
-            onReset={filters.resetFilters}
+            
           />
 
           <div className="products-content">

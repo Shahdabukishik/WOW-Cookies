@@ -1,8 +1,34 @@
+
+.marhey {
+  font-family: "Marhey", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Marhey", sans-serif;
+}
+
+/* تطبيق على كل الصفحة */
+html, body, #root {
+  height: 100%;
+  font-family: "Marhey", sans-serif;
+}
+
+body {
+  background-color: #FDF8F5;
+  font-family: 'Marhey', cursive !important;
+  direction: rtl;
+}
 :root {
   --wow-primary: #3aa4ad;
   --wow-soft: #9acace;
   --wow-accent: #39a1aa;
-  --wow-bg: #f7fbfb;
+  --wow-bg: #FDF8F5;
   --wow-text: #163336;
   --wow-muted: #5f7f82;
   --wow-heading: var(--wow-text);
@@ -13,12 +39,12 @@
   font-weight: 400;
   color: var(--wow-text);
   background:
-    radial-gradient(circle at top, rgba(154, 202, 206, 0.24), transparent 32%),
-    linear-gradient(180deg, #fcffff 0%, var(--wow-background) 100%);
+   #ECE7E4;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
 
 html {
@@ -54,4 +80,5 @@ img {
 
 #root {
   min-height: 100vh;
+  
 }

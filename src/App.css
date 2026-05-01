@@ -1,3 +1,31 @@
+/* reset بسيط */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Marhey", sans-serif;
+}
+
+/* تطبيق على كل الصفحة */
+html, body, #root {
+  height: 100%;
+  font-family: "Marhey", sans-serif;
+}
+
+body {
+  background-color: #FDF8F5;
+  font-family: 'Marhey', cursive;
+  direction: rtl;
+}
+body, button, input, textarea {
+  font-family: 'Marhey', cursive !important ;
+}
+.marhey{
+  font-family: "Marhey", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
 
 .app-shell {
   min-height: 100vh;
