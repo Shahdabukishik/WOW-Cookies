@@ -1,4 +1,3 @@
-import "./product.css"
 import type { Product } from "@/types/database.types"
 
 type Props = {
@@ -31,28 +30,28 @@ export const ProductCard = ({ product, onAddToCart, rating }: Props) => {
       </div>
 
       <div className="product-content">
-        <h3>{product.name}</h3>
+        <div className="product-text">
+          <h3>{product.name}</h3>
 
-        <p className="desc">
-          {product.description?.slice(0, 60)}...
-        </p>
+          <p className="desc">
+            {product.description?.slice(0, 60)}...
+          </p>
 
-        <div className="bottom">
           <span className="price">{product.price} ₪</span>
-          <div className="actions">
-            <button
-              className="btn-primary"
-              onClick={() => onAddToCart(product)}
-            >
-              + أضف
-            </button>
-            <button
-              className="btn-primary"
+        </div>
 
-            >
-              التفاصيل
-            </button>
-          </div>
+        <div className="actions">
+          <button
+            className="product-action"
+            onClick={() => onAddToCart(product)}
+          >
+            + أضف
+          </button>
+          <button
+            className="product-action"
+          >
+            التفاصيل
+          </button>
         </div>
       </div>
 

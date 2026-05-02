@@ -5,9 +5,11 @@ export default function MainLayout() {
   return (
     <>
       <Navbar />
-      <div className="container mt-4">
-        <Outlet />
-      </div>
+      <main className="app-main">
+        <div className="container">
+          <Outlet />
+        </div>
+      </main>
     </>
   )
 }

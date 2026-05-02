@@ -17,12 +17,13 @@ export const Filters = ({
     selectedCategories.includes(c)
 
   return (
-    <div className="d-flex flex-column align-items-center gap-3 my-4">
+    <div className="filter-controls">
 
       {/* Categories */}
-      <div style={{ display: "flex", gap: "10px" }} role="group">
+      <div className="filter-group" role="group">
         <button
-          type="button" className="" style={{ backgroundColor: isActive("cookie") ? "#3AA4AD" : "transparent", color: isActive("cookie") ? "#fff" : "#3AA4AD", border: "1px solid #3AA4AD", borderRadius: "4px", padding: "8px 16px" }}
+          type="button"
+          className={`filter-button ${isActive("cookie") ? "active" : ""}`}
           onClick={() => onToggleCategory("cookie")}
         >
           كوكيز
@@ -31,7 +32,7 @@ export const Filters = ({
         <button
           type="button"
           
-           style={{ backgroundColor: isActive("box") ? "#3AA4AD" : "transparent", color: isActive("box") ? "#fff" : "#3AA4AD", border: "1px solid #3AA4AD", borderRadius: "4px", padding: "8px 16px" }}
+          className={`filter-button ${isActive("box") ? "active" : ""}`}
           onClick={() => onToggleCategory("box")}
         >
           بوكس
@@ -39,11 +40,11 @@ export const Filters = ({
       </div>
 
       {/* Sort */}
-      <div className="btn-group" role="group" aria-label="Sort options">
+      <div className="filter-group" role="group" aria-label="Sort options">
         <button
           type="button"
           
-           style={{ backgroundColor: sortOrder === "price-asc" ? "#3AA4AD" : "transparent", color: sortOrder === "price-asc" ? "#fff" : "#3AA4AD", border: "1px solid #3AA4AD", borderRadius: "4px", padding: "8px 16px" }}
+          className={`filter-button ${sortOrder === "price-asc" ? "active" : ""}`}
           onClick={() => onSortChange("price-asc")}
         >
           ↑
@@ -52,7 +53,7 @@ export const Filters = ({
         <button
           type="button"
           
-           style={{ backgroundColor: sortOrder === "price-desc" ? "#3AA4AD" : "transparent", color: sortOrder === "price-desc" ? "#fff" : "#3AA4AD", border: "1px solid #3AA4AD", borderRadius: "4px", padding: "8px 16px" }}
+          className={`filter-button ${sortOrder === "price-desc" ? "active" : ""}`}
           onClick={() => onSortChange("price-desc")}
         >
           ↓

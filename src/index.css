@@ -1,65 +1,48 @@
-
-.marhey {
-  font-family: "Marhey", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Marhey", sans-serif;
-}
-
-/* تطبيق على كل الصفحة */
-html, body, #root {
-  height: 100%;
-  font-family: "Marhey", sans-serif;
-}
-
-body {
-  background-color: #FDF8F5;
-  font-family: 'Marhey', cursive !important;
-  direction: rtl;
-}
 :root {
+  --wow-bg: #ECE7E4;
+  --wow-surface-tint: #f4ebe3;
   --wow-primary: #3aa4ad;
-  --wow-soft: #9acace;
-  --wow-accent: #39a1aa;
-  --wow-bg: #FDF8F5;
-  --wow-text: #163336;
-  --wow-muted: #5f7f82;
-  --wow-heading: var(--wow-text);
-  --wow-surface: #ffffff;
-  --wow-background: var(--wow-bg);
-  font-family: 'Trebuchet MS', 'Segoe UI', Tahoma, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: var(--wow-text);
-  background:
-   #ECE7E4;
+  --wow-primary-dark: #16777f;
+  --wow-text: #2c2522;
+  --wow-muted: #71645f;
+  --wow-border: rgba(44, 37, 34, 0.1);
+  --wow-shadow: 0 16px 40px rgba(46, 32, 25, 0.08);
+  --wow-radius: 18px;
+  --wow-navbar-height: 82px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
 }
 
 html {
+  min-width: 320px;
+  min-height: 100%;
   direction: rtl;
   scroll-behavior: smooth;
-}
-
-* {
-  box-sizing: border-box;
+  background: var(--wow-bg);
 }
 
 body {
-  margin: 0;
   min-width: 320px;
-  background: transparent;
+  min-height: 100%;
+  margin: 0;
+  direction: rtl;
+  color: var(--wow-text);
+  background: var(--wow-bg);
+  font-family: "Marhey", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100vh;
+  background: var(--wow-bg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 button,
@@ -69,16 +52,16 @@ textarea {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
 a {
   color: inherit;
-  text-decoration: none;
 }
 
-img {
+img,
+video {
+  display: block;
   max-width: 100%;
-}
-
-#root {
-  min-height: 100vh;
-  
 }

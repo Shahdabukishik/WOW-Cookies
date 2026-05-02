@@ -21,13 +21,13 @@ export default function HomePage() {
   return (
     <>
       {/* 🎥 Video Hero */}
-      <section className="mb-5 position-relative" style={{ height: "600px", overflow: "hidden" }}>
-        <video autoPlay muted loop className="w-100 h-100 object-fit-cover rounded" >
+      <section className="mb-5 position-relative hero-video-section">
+        <video autoPlay muted loop>
           <source src="https://xnwjkhrtogrguplpabfl.supabase.co/storage/v1/object/public/general_images/hero-video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="position-absolute top-50 start-50 translate-middle text-center text-white text-shadow">
-          <h1 style={{ fontSize: 60 }}>خُبز ب كل حب</h1>
+          <h1 className="hero-title">خُبز ب كل حب</h1>
         </div>
       </section>
 
@@ -102,71 +102,6 @@ export default function HomePage() {
           </div>
         ))}
       </div>
-      <style>{`
-        .offer-card {
-  background: linear-gradient(135deg, #3AA4AD, #9ACACE);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 30px 20px;
-  position: relative;
-  overflow: hidden;
-
-  /* 👇 الجديد */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-/* خلي العناصر فوق الخلفية */
-.offer-card > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* الدائرة الخلفية */
-.offer-card::before {
-  content: "";
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 50%;
-  top: -40px;
-  left: -40px;
-  z-index: 1; /* 👈 مهم */
-}
-
-/* badge */
-.offer-badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: white;
-  color: #3AA4AD;
-  font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 10px;
-  font-size: 12px;
-  z-index: 3;
-}
-
-.offer-btn {
-  background: white;
-  color: #3AA4AD;
-  border: none;
-  border-radius: 10px;
-  padding: 6px 12px;
-  font-weight: bold;
-  transition: 0.2s;
-}
-
-.offer-btn:hover {
-  background: #f1f1f1;
-}
-        `}</style>
     </>
 
   )

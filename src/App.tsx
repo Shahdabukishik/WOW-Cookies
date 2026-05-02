@@ -31,6 +31,7 @@ import ProductsPage from "./pages/ProductsPage"
 import OffersPage from "./pages/OffersPage"
 import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/LoginPage"
+import "./App.css"
 
 function App() {
   return (
