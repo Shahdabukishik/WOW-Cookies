@@ -1,7 +1,12 @@
 import type { Product } from "@/types/database.types"
 
 type Props = {
-  product: Product
+  product: Product & {
+    finalPrice?: number
+    originalPrice?: number
+    discount?: number
+    offerTitle?: string
+  }
   onAddToCart: (product: Product) => void
   rating?: number
 }
@@ -13,6 +18,8 @@ const categoryLabels: Record<Product["category"], string> = {
 };
 
 export const ProductCard = ({ product, onAddToCart, rating }: Props) => {
+  const hasDiscount = product.discount !== undefined
+
   return (
     <article className="product-card">
 
@@ -27,6 +34,11 @@ export const ProductCard = ({ product, onAddToCart, rating }: Props) => {
             <span>{rating}</span>
           </div>
         )}
+        {hasDiscount && (
+          <div className="position-absolute top-0 start-0 m-2 px-2 py-1 rounded bg-danger text-white small">
+            -{product.discount}%
+          </div>
+        )}
       </div>
 
       <div className="product-content">
@@ -37,7 +49,25 @@ export const ProductCard = ({ product, onAddToCart, rating }: Props) => {
             {product.description?.slice(0, 60)}...
           </p>
 
-          <span className="price">{product.price} ₪</span>
+          <div className="price d-flex flex-column">
+            {hasDiscount ? (
+              <>
+                <span className="text-muted text-decoration-line-through">
+                  {product.originalPrice} ₪
+                </span>
+                <span className="fw-bold text-danger">
+                  {product.finalPrice} ₪
+                </span>
+                {product.offerTitle && (
+                  <span className="small text-danger">
+                    {product.offerTitle}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span>{product.price} ₪</span>
+            )}
+          </div>
         </div>
 
         <div className="actions">

@@ -2,27 +2,40 @@ import { useEffect, useState } from "react"
 import { getOffers } from "../services/offers.service"
 import type { offers } from "../types/database.types"
 
-export const useOffers = () => {
+export const useOffersState = () => {
   const [offers, setOffers] = useState<offers[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getOffers().then((data) => {
-      const now = new Date()
+    let isMounted = true
 
-      const activeOffers = data.filter((offer: offers) => {
-        const start = new Date(offer.start_date)
-        const end = new Date(offer.end_date)
+    getOffers()
+      .then((data) => {
+        const now = new Date()
 
-        return (
-          offer.is_global &&
-          now >= start &&
-          now <= end
-        )
+        const activeOffers = data.filter((offer: offers) => {
+          const start = new Date(offer.start_date)
+          const end = new Date(offer.end_date)
+
+          return now >= start && now <= end
+        })
+
+        if (isMounted) setOffers(activeOffers)
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false)
       })
 
-      setOffers(activeOffers)
-    })
+    return () => {
+      isMounted = false
+    }
   }, [])
+
+  return { offers, loading }
+}
+
+export const useOffers = () => {
+  const { offers } = useOffersState()
 
   return offers
 }

@@ -3,18 +3,16 @@ import { useTopRated } from "../hooks/useTopRated"
 import { useMostSelling } from "../hooks/useMostSelling"
 import { useOffers } from "../hooks/useOffers"
 import { ProductCard } from "@/components/ProductCard"
+import { useCart } from "@/hooks/useCart"
 
 export default function HomePage() {
   const { products, loading } = useProducts()
+  const cart = useCart()
   const topRated = useTopRated(products)
   const mostSelling = useMostSelling(products)
   const offers = useOffers()
 
   const recommendation = products[1] ?? products[0]
-
-  const handleAddToCart = (product: any) => {
-    console.log("Add to cart", product)
-  }
 
   if (loading) return <p>Loading...</p>
 
@@ -85,7 +83,7 @@ export default function HomePage() {
         {topRated.map(p => (
           <div className="col-md-3" key={p.id}>
             <ProductCard product={p}
-              onAddToCart={handleAddToCart}
+              onAddToCart={cart.addToCart}
               rating={p.rating}
             />
           </div>
@@ -98,7 +96,7 @@ export default function HomePage() {
       <div className="row">
         {mostSelling.map(p => (
           <div className="col-md-3" key={p.id}>
-            <ProductCard product={p} onAddToCart={handleAddToCart} />
+            <ProductCard product={p} onAddToCart={cart.addToCart} />
           </div>
         ))}
       </div>

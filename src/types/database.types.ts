@@ -30,17 +30,18 @@ export type Order = {
   total_price: number
   address: string
   phone: string
-  payment_method: "cash" | "reflect"
+  fulfillment_method: "delivery" | "pickup"
   created_at: string
+  
 }
-
+ 
 export type OrderItem = {
   id: string
   order_id: string
   product_id: string
   quantity: number
   price: number
-  product?: Product
+  created_at: string
 }
 
 export type Interaction = {
@@ -68,4 +69,10 @@ export type offers = {
   start_date: string
   end_date: string
   created_at: string
+}
+
+export type product_offers = {
+  id: string
+  product_id: string 
+  offer_id: string
 }

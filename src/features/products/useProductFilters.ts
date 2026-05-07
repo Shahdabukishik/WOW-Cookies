@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import type { Product } from "@/types/database.types"
 
-export const useProductFilters = (products: Product[]) => {
+export const useProductFilters = <ProductItem extends Product>(products: ProductItem[]) => {
   const [selectedCategories, setSelectedCategories] = useState<Product["category"][]>([])
   const [sortOrder, setSortOrder] = useState<"price-asc" | "price-desc">("price-asc")
 
-  const categoryOptions = useMemo(
+  const categoryOptions = useMemo<Product["category"][]>(
     () => [...new Set(products.map((p) => p.category))],
     [products]
   )
@@ -26,6 +26,14 @@ export const useProductFilters = (products: Product[]) => {
     setSortOrder("price-asc")
   }
 
+  const toggleCategory = useCallback((category: Product["category"]) => {
+    setSelectedCategories((currentCategories) =>
+      currentCategories.includes(category)
+        ? currentCategories.filter((currentCategory) => currentCategory !== category)
+        : [...currentCategories, category]
+    )
+  }, [])
+
   return {
     selectedCategories,
     setSelectedCategories,
@@ -34,5 +42,6 @@ export const useProductFilters = (products: Product[]) => {
     categoryOptions,
     visibleProducts,
     resetFilters,
+    toggleCategory,
   }
 }
