@@ -13,7 +13,6 @@ export default function Navbar() {
 
     fetchUser()
   }, [])
-
   return (
     <nav
       className="navbar navbar-expand-lg navbar-dark fixed-top site-navbar"
@@ -54,6 +53,11 @@ export default function Navbar() {
             <li className="nav-item">
               <Link className="nav-link text-white" to="/offers">العروض</Link>
             </li>
+            {user?.profile?.role === "admin" && (
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/admin">الإدارة</Link>
+              </li>
+            )}
           </ul>
 
           {/* Actions */}

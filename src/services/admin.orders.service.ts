@@ -3,11 +3,24 @@ import { supabase } from "../lib/supabaseClient"
 export const getAllOrders = async () => {
   const { data, error } = await supabase
     .from("orders")
-    .select("*, order_items(*, product:products(*))")
+    .select(`
+      *,
+      order_items (
+        *,
+        product:products (*)
+      )
+    `)
     .order("created_at", { ascending: false })
 
-  if (error) throw error
-  return data
+  console.log("orders:", data)
+  console.log("error:", error)
+
+  if (error) {
+    console.error(error)
+    return []
+  }
+
+  return data || []
 }
 
 export const updateOrderStatus = async (id: string, status: string) => {

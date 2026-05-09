@@ -1,15 +1,14 @@
-// src/hooks/useAuth.ts
 import { useEffect, useState } from 'react'
-import type { User } from '@supabase/supabase-js'
 import * as authService from '../services/auth.service'
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    authService.getCurrentUser().then(({ data }) => {
-      setUser(data.user)
+    authService.getCurrentUser().then((currentUser) => {
+      setUser(currentUser)
+      setLoading(false)
     })
   }, [])
 
@@ -23,6 +22,7 @@ export const useAuth = () => {
   const loginWithGoogle = async () => {
     setLoading(true)
     const res = await authService.signInWithGoogle()
+    setLoading(false)
     return res
   }
 

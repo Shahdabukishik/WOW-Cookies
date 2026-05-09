@@ -86,7 +86,7 @@ export const useCheckout = (
 
     try {
       const currentUser = await getCurrentUser()
-      const user = currentUser.data.user
+      const user = currentUser?.profile
 
       if (!user) {
         setError("Please sign in before confirming your order.")

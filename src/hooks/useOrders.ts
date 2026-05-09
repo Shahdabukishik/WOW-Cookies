@@ -11,7 +11,7 @@ export const useOrders = () => {
     lastName: string
   ) => {
     const currentUser = await getCurrentUser()
-    const user = currentUser.data.user
+    const user = currentUser?.profile
     if (!user) return null
 
     return submitOrder({
