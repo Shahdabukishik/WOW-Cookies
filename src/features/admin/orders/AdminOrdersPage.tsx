@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-import { getAllOrders, updateOrderStatus } from "../../../services/admin.orders.service"
+import { getAllOrders, updateOrderStatus } from "@/services/admin.orders.service"
 
 export const AdminOrdersPage = () => {
   const [orders, setOrders] = useState<any[]>([])

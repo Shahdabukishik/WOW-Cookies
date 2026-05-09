@@ -1,3 +1,5 @@
+
+
 export type Product = {
   id: string
   name: string
@@ -8,6 +10,8 @@ export type Product = {
   is_active: boolean
   created_at: string
   Ingredients:string
+  rating?: number
+  sales?: number
 }
 
 export type CartItem = {
@@ -26,17 +30,18 @@ export type Order = {
   total_price: number
   address: string
   phone: string
-  payment_method: "cash" | "reflect"
+  fulfillment_method: "delivery" | "pickup"
   created_at: string
+  
 }
-
+ 
 export type OrderItem = {
   id: string
   order_id: string
   product_id: string
   quantity: number
   price: number
-  product?: Product
+  created_at: string
 }
 
 export type Interaction = {
@@ -54,4 +59,20 @@ export type UserProfile = {
   email: string | null
   created_at: string
   role: "user" | "admin"
+}
+
+export type offers = {
+  id: string
+  title: string 
+  discount_percentage: number
+  is_global: boolean
+  start_date: string
+  end_date: string
+  created_at: string
+}
+
+export type product_offers = {
+  id: string
+  product_id: string 
+  offer_id: string
 }

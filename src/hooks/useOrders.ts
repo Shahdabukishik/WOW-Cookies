@@ -1,28 +1,29 @@
-import { createOrder } from "../services/orders.service"
-import { supabase } from "../lib/supabaseClient"
+import { getCurrentUser } from "@/services/auth.service"
+import { computeTotalPrice, type CartItemView } from "@/services/cart.service"
+import { submitOrder } from "@/services/order.service"
 
 export const useOrders = () => {
-  const checkout = async (cart: any[], address: string, phone: string) => {
-    const user = (await supabase.auth.getUser()).data.user
-    if (!user) return
+  const checkout = async (
+    cart: CartItemView[],
+    address: string,
+    phone: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    const currentUser = await getCurrentUser()
+    const user = currentUser?.profile
+    if (!user) return null
 
-    const total = cart.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0
-    )
-
-    const order = await createOrder(
-      {
-        user_id: user.id,
-        address,
-        phone,
-        total_price: total,
-        payment_method: "cash",
-      },
-      cart
-    )
-
-    return order
+    return submitOrder({
+      userId: user.id,
+      firstName,
+      lastName,
+      phone,
+      address,
+      fulfillmentMethod: "delivery",
+      items: cart,
+      totalPrice: computeTotalPrice(cart),
+    })
   }
 
   return { checkout }
