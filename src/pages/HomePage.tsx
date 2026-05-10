@@ -1,20 +1,71 @@
+import { useEffect, useState } from "react"
 import { useProducts } from "../hooks/useProducts"
 import { useTopRated } from "../hooks/useTopRated"
 import { useMostSelling } from "../hooks/useMostSelling"
 import { useOffers } from "../hooks/useOffers"
 import { ProductCard } from "@/components/ProductCard"
 import { useCart } from "@/hooks/useCart"
+import { fetchHeroRecommendation } from "@/services/recommendation.service"
+import { trackCurrentUserInteraction } from "@/services/interaction"
+import type { Product } from "@/types/database.types"
+import { useNavigate } from "react-router-dom"
 
 export default function HomePage() {
   const { products, loading } = useProducts()
   const cart = useCart()
+  const navigate = useNavigate()
   const topRated = useTopRated(products)
   const mostSelling = useMostSelling(products)
   const offers = useOffers()
+  const [recommendedProduct, setRecommendedProduct] = useState<Product | null>(null)
 
-  const recommendation = products[1] ?? products[0]
+  const recommendation = recommendedProduct ?? products[1] ?? products[0]
+
+  useEffect(() => {
+    let mounted = true
+
+    if (products.length === 0) return
+
+    fetchHeroRecommendation(products)
+      .then((result) => {
+        if (!mounted) return
+        setRecommendedProduct(result)
+      })
+      .catch(() => {
+        if (!mounted) return
+        setRecommendedProduct(null)
+      })
+
+    return () => {
+      mounted = false
+    }
+  }, [products])
+
+  useEffect(() => {
+    if (!recommendation?.id) return
+    void trackCurrentUserInteraction(recommendation.id, "view", {
+      source: "home_recommendation",
+      metadata: { page: "home", block: "hero_recommendation" },
+    })
+  }, [recommendation?.id])
 
   if (loading) return <p>Loading...</p>
+
+  const handleAddToCart = (product: Product) => {
+    cart.addToCart(product)
+    void trackCurrentUserInteraction(product.id, "add_to_cart", {
+      source: "home_product_card",
+      metadata: { page: "home" },
+    })
+  }
+
+  const handleRecommendationClick = (product: Product) => {
+    void trackCurrentUserInteraction(product.id, "click", {
+      source: "home_recommendation_cta",
+      metadata: { page: "home", block: "hero_recommendation" },
+    })
+    navigate(`/products/${product.id}`)
+  }
 
   return (
     <>
@@ -66,7 +117,10 @@ export default function HomePage() {
 
         <p>اخترناه خصيصاً لك </p>
 
-        <button className=" offer-btn">
+        <button
+          className=" offer-btn"
+          onClick={() => handleRecommendationClick(recommendation)}
+        >
           جرّب الآن
         </button>
 
@@ -83,7 +137,14 @@ export default function HomePage() {
         {topRated.map(p => (
           <div className="col-md-3" key={p.id}>
             <ProductCard product={p}
-              onAddToCart={cart.addToCart}
+              onAddToCart={handleAddToCart}
+              onViewDetails={(product) => {
+                void trackCurrentUserInteraction(product.id, "click", {
+                  source: "home_top_rated_details",
+                  metadata: { page: "home", section: "top_rated" },
+                })
+                navigate(`/products/${product.id}`)
+              }}
               rating={p.rating}
             />
           </div>
@@ -96,7 +157,17 @@ export default function HomePage() {
       <div className="row">
         {mostSelling.map(p => (
           <div className="col-md-3" key={p.id}>
-            <ProductCard product={p} onAddToCart={cart.addToCart} />
+            <ProductCard
+              product={p}
+              onAddToCart={handleAddToCart}
+              onViewDetails={(product) => {
+                void trackCurrentUserInteraction(product.id, "click", {
+                  source: "home_most_selling_details",
+                  metadata: { page: "home", section: "most_selling" },
+                })
+                navigate(`/products/${product.id}`)
+              }}
+            />
           </div>
         ))}
       </div>

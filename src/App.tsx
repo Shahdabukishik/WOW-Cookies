@@ -6,6 +6,7 @@ import ProductsPage from "./pages/ProductsPage"
 import OffersPage from "./pages/OffersPage"
 import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/Login"
+import ProductDetailsPage from "./pages/ProductDetailsPage"
 import AdminRoute from "./components/AdminRoute"
 import "./App.css"
 import { AdminLayout } from "./features/admin/components/AdminLayout"
@@ -21,6 +22,7 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products/:id" element={<ProductDetailsPage />} />
         <Route path="/offers" element={<OffersPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<LoginPage />} />

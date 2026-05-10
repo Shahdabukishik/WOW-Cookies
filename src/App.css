@@ -39,6 +39,63 @@
   flex-wrap: wrap;
 }
 
+.wow-footer {
+  margin-top: 2rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--wow-primary-dark), var(--wow-primary));
+}
+
+.wow-footer-top {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 1rem;
+  padding-block: 1.4rem;
+}
+
+.wow-footer-brand h2 {
+  margin: 0 0 0.45rem;
+  font-size: 1.35rem;
+}
+
+.wow-footer-brand p,
+.wow-footer-note p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.wow-footer-contact {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wow-footer-contact .section-kicker,
+.wow-footer-note .section-kicker {
+  color: #fff;
+  opacity: 0.9;
+}
+
+.wow-footer-contact a {
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.95;
+}
+
+.wow-footer-contact a:hover,
+.wow-footer-contact a:focus-visible {
+  text-decoration: underline;
+  opacity: 1;
+}
+
+.wow-footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-block: 0.7rem 0.9rem;
+  text-align: center;
+}
+
+.wow-footer-bottom small {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .page-shell,
 .section-block {
   padding-block: clamp(1.5rem, 4vw, 3rem);
@@ -612,6 +669,69 @@
   gap: 0.6rem;
 }
 
+.details-layout {
+  display: grid;
+}
+
+.details-card {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  border: 1px solid var(--wow-border);
+  border-radius: var(--wow-radius);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--wow-shadow);
+  overflow: hidden;
+}
+
+.details-image-wrap {
+  background: var(--wow-surface-tint);
+}
+
+.details-image {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  object-fit: cover;
+}
+
+.details-content {
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1rem, 3vw, 1.8rem);
+}
+
+.details-content h1 {
+  margin: 0;
+}
+
+.details-category {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  color: var(--wow-primary-dark);
+  background: var(--wow-surface-tint);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.details-description {
+  margin: 0;
+  color: var(--wow-muted);
+  line-height: 1.9;
+}
+
+.details-price {
+  color: var(--wow-primary-dark);
+  font-size: 1.3rem;
+}
+
+.details-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
 @media (max-width: 991.98px) {
   .site-navbar .navbar-collapse {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -622,12 +742,18 @@
     margin-top: 0.75rem;
   }
 
+  .wow-footer-top {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
   .login-layout {
     grid-template-columns: 1fr;
   }
 
   .cart-layout,
-  .checkout-modal-body {
+  .checkout-modal-body,
+  .details-card {
     grid-template-columns: 1fr;
   }
 

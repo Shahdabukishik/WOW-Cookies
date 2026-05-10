@@ -8,6 +8,7 @@ type Props = {
     offerTitle?: string
   }
   onAddToCart: (product: Product) => void
+  onViewDetails?: (product: Product) => void
   rating?: number
 }
 
@@ -17,7 +18,7 @@ const categoryLabels: Record<Product["category"], string> = {
   box: "بوكس",
 };
 
-export const ProductCard = ({ product, onAddToCart, rating }: Props) => {
+export const ProductCard = ({ product, onAddToCart, onViewDetails, rating }: Props) => {
   const hasDiscount = product.discount !== undefined
 
   return (
@@ -79,6 +80,7 @@ export const ProductCard = ({ product, onAddToCart, rating }: Props) => {
           </button>
           <button
             className="product-action"
+            onClick={() => onViewDetails?.(product)}
           >
             التفاصيل
           </button>
