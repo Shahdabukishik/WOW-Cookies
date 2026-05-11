@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CartItems } from "@/components/cart/CartItems"
 import { CheckoutModal } from "@/components/cart/CheckoutModal"
 import EmptyCollectionState from "@/components/common/EmptyCollectionState"
@@ -7,14 +7,34 @@ import { useCheckout } from "@/hooks/useCheckout"
 
 export default function CartPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const [showOrderToast, setShowOrderToast] = useState(false)
+  const orderToastTimerRef = useRef<number | null>(null)
   const cart = useCart()
   const checkout = useCheckout(cart.selectedItems, {
     onSuccess: async () => {
       cart.removeMany(cart.selectedItems.map((item) => item.id))
       await cart.refreshCart()
       setCheckoutOpen(false)
+      setShowOrderToast(true)
+
+      if (orderToastTimerRef.current !== null) {
+        window.clearTimeout(orderToastTimerRef.current)
+      }
+
+      orderToastTimerRef.current = window.setTimeout(() => {
+        setShowOrderToast(false)
+        orderToastTimerRef.current = null
+      }, 5000)
     },
   })
+
+  useEffect(() => {
+    return () => {
+      if (orderToastTimerRef.current !== null) {
+        window.clearTimeout(orderToastTimerRef.current)
+      }
+    }
+  }, [])
 
   if (cart.loading) return <p>جاري التحميل...</p>
 
@@ -84,6 +104,10 @@ export default function CartPage() {
         onConfirm={checkout.confirmOrder}
         onFieldChange={checkout.updateField}
       />
+
+      <div className={`cart-toast ${showOrderToast ? "show" : ""}`} role="status" aria-live="polite">
+        تم الطلب بنجاح
+      </div>
     </main>
   )
 }

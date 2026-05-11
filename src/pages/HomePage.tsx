@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+﻿import { useEffect, useState } from "react"
 import { useProducts } from "../hooks/useProducts"
 import { useTopRated } from "../hooks/useTopRated"
 import { useMostSelling } from "../hooks/useMostSelling"
@@ -18,6 +18,13 @@ export default function HomePage() {
   const mostSelling = useMostSelling(products)
   const offers = useOffers()
   const [recommendedProduct, setRecommendedProduct] = useState<Product | null>(null)
+  const moods = [
+    { key: "very_sad", emoji: "😭", label: "very sad" },
+    { key: "sad", emoji: "😢", label: "sad" },
+    { key: "natural", emoji: "😐", label: "natural" },
+    { key: "happy", emoji: "😊", label: "happy" },
+    { key: "very_happy", emoji: "🤩", label: "very happy" },
+  ]
 
   const recommendation = recommendedProduct ?? products[1] ?? products[0]
 
@@ -69,7 +76,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* 🎥 Video Hero */}
       <section className="mb-5 position-relative hero-video-section">
         <video autoPlay muted loop>
           <source src="https://xnwjkhrtogrguplpabfl.supabase.co/storage/v1/object/public/general_images/hero-video.mp4" type="video/mp4" />
@@ -80,63 +86,57 @@ export default function HomePage() {
         </div>
       </section>
 
-<div className="row g-3 mb-4">
-
-  {/* 🎁 Offer */}
-  {offers.slice(0,1).map(o => (
-    <div className="col-md-6" key={o.id}>
-      <div className="offer-card h-100">
-
-        <div className="offer-badge">
-          {o.discount_percentage}% خصم
+      <section className="mood-chatbot glass-card mb-4" aria-label="Mood chatbot">
+        <div className="mood-grid" role="group" aria-label="Mood selector">
+          {moods.map((mood) => (
+            <button
+              key={mood.key}
+              className="mood-btn"
+              type="button"
+              onClick={() => navigate(`/mood/${mood.key}`)}
+              aria-label={mood.label}
+              title={mood.label}
+            >
+              <span>{mood.emoji}</span>
+            </button>
+          ))}
         </div>
+      </section>
 
-        <h5 className="fw-bold mb-2">{o.title}</h5>
-        <p>خصم لفترة محدودة</p>
+      <div className="row g-3 mb-4">
+        {offers.slice(0, 1).map((o) => (
+          <div className="col-md-6" key={o.id}>
+            <div className="offer-card h-100">
+              <div className="offer-badge">{o.discount_percentage}% خصم</div>
+              <h5 className="fw-bold mb-2">{o.title}</h5>
+              <p>خصم لفترة محدودة</p>
+              <button className=" offer-btn" onClick={() => navigate("/offers")}>
+                اطلب الآن
+              </button>
+            </div>
+          </div>
+        ))}
 
-        <button className=" offer-btn">
-          اطلب الآن
-        </button>
-
+        {recommendation && (
+          <div className="col-md-6">
+            <div className="offer-card h-100">
+              <div className="offer-badge">لكَ</div>
+              <h5 className="fw-bold mb-2">{recommendation.name}</h5>
+              <p>اخترناه خصيصاً لك </p>
+              <button className=" offer-btn" onClick={() => handleRecommendationClick(recommendation)}>
+                جرّب الآن
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-  ))}
 
-  {/* 🤖 Recommendation */}
-  {recommendation && (
-    <div className="col-md-6">
-      <div className="offer-card h-100">
-
-        <div className="offer-badge">
-          لكَ
-        </div>
-
-        <h5 className="fw-bold mb-2">
-          {recommendation.name}
-        </h5>
-
-        <p>اخترناه خصيصاً لك </p>
-
-        <button
-          className=" offer-btn"
-          onClick={() => handleRecommendationClick(recommendation)}
-        >
-          جرّب الآن
-        </button>
-
-      </div>
-    </div>
-  )}
-
-</div>
-
-
-      {/* ⭐ Top Rated */}
-      <h3>الأكثر تقييمًا</h3>
+      <h3>الأكثر تقييماً</h3>
       <div className="row">
-        {topRated.map(p => (
+        {topRated.map((p) => (
           <div className="col-md-3" key={p.id}>
-            <ProductCard product={p}
+            <ProductCard
+              product={p}
               onAddToCart={handleAddToCart}
               onViewDetails={(product) => {
                 void trackCurrentUserInteraction(product.id, "click", {
@@ -151,11 +151,9 @@ export default function HomePage() {
         ))}
       </div>
 
-
-      {/* 🔥 Most Selling */}
-      <h3 className="mt-4">الأكثر مبيعًا</h3>
+      <h3 className="mt-4">الأكثر مبيعاً</h3>
       <div className="row">
-        {mostSelling.map(p => (
+        {mostSelling.map((p) => (
           <div className="col-md-3" key={p.id}>
             <ProductCard
               product={p}
@@ -172,6 +170,5 @@ export default function HomePage() {
         ))}
       </div>
     </>
-
   )
 }

@@ -7,6 +7,7 @@ import OffersPage from "./pages/OffersPage"
 import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/Login"
 import ProductDetailsPage from "./pages/ProductDetailsPage"
+import MoodCookiesPage from "./pages/MoodCookiesPage"
 import AdminRoute from "./components/AdminRoute"
 import "./App.css"
 import { AdminLayout } from "./features/admin/components/AdminLayout"
@@ -23,6 +24,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/:id" element={<ProductDetailsPage />} />
+        <Route path="/mood/:mood" element={<MoodCookiesPage />} />
         <Route path="/offers" element={<OffersPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<LoginPage />} />
