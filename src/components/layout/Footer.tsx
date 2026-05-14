@@ -1,25 +1,33 @@
 function Footer() {
   return (
     <footer className="wow-footer">
-      <div className="wow-container wow-footer-grid">
-        <div>
+      <div className="wow-container wow-footer-top">
+        <div className="wow-footer-brand">
           <h2>واو كوكيز</h2>
-          <p>
-            واجهة متجر عربية جاهزة لعرض الصور والوصف والعروض بطريقة واضحة، مع قابلية الربط
-            لاحقاً مع قاعدة البيانات.
-          </p>
+          <p>مخبوزات طازجة يومياً بطعم يبهج يومك.</p>
         </div>
-        <div>
-          <p className="section-kicker">استكشف</p>
-          <p>العروض</p>
-          <p>الأعلى تقييماً</p>
-          <p>الأكثر مبيعاً</p>
+
+        <div className="wow-footer-contact">
+          <p className="section-kicker">تواصل معنا</p>
+          <a href="mailto:woowcookies25@gmail.com">woowcookies25@gmail.com</a>
+          <a
+            href="https://www.instagram.com/woow.cooki?igsh=dXhrOTFuanFzbGxr&utm_source=qr"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Instagram: @woow.cooki
+          </a>
         </div>
-        <div>
-          <p className="section-kicker">جاهز للتطوير</p>
-          <p>ربط المنتجات</p>
-          <p>صور التخزين</p>
-          <p>البيانات الحية</p>
+
+        <div className="wow-footer-note">
+          <p className="section-kicker">الخدمة</p>
+          <p>طلب سريع - توصيل مرن - نكهات مميزة</p>
+        </div>
+      </div>
+
+      <div className="wow-footer-bottom">
+        <div className="wow-container">
+          <small>© {new Date().getFullYear()} WOW COOKIES. جميع الحقوق محفوظة.</small>
         </div>
       </div>
     </footer>
