@@ -53,6 +53,9 @@ export default function Navbar() {
             <li className="nav-item">
               <Link className="nav-link text-white" to="/offers">العروض</Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link text-white" to="/wheel">عجلة الكوكيز</Link>
+            </li>
             {user?.profile?.role === "admin" && (
               <li className="nav-item">
                 <Link className="nav-link text-white" to="/admin">الإدارة</Link>

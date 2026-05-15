@@ -10,6 +10,11 @@ export default function ProductsPage() {
   const cart = useCart()
   const { filters, isLoading } = useProductsCatalog()
   const navigate = useNavigate()
+  const visibleProducts = filters.visibleProducts.filter((product) => {
+    const name = product.name.toLowerCase()
+    const isCoffeeOrMilk = name.includes("coffee") || name.includes("milk") || name.includes("قهوة") || name.includes("حليب")
+    return !isCoffeeOrMilk
+  })
 
   const handleAddToCart = async (productId: string) => {
     await trackCurrentUserInteraction(productId, "add_to_cart", {
@@ -39,7 +44,7 @@ export default function ProductsPage() {
           <div className="products-content">
             {isLoading ? (
               <p>Loading...</p>
-            ) : filters.visibleProducts.length === 0 ? (
+            ) : visibleProducts.length === 0 ? (
               <EmptyCollectionState
                 actionLabel="Reset"
                 description=""
@@ -48,7 +53,7 @@ export default function ProductsPage() {
               />
             ) : (
               <div className="products-zigzag-list">
-                {filters.visibleProducts.map((product) => (
+                {visibleProducts.map((product) => (
                   <ProductCard
                     key={product.id}
                     product={product}
