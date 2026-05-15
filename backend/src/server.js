@@ -7,7 +7,7 @@ import { pickRecommendation } from "./recommendation.js"
 
 const app = express()
 const port = Number(process.env.PORT || 4000)
-const frontendOrigin = process.env.FRONTEND_ORIGIN || "http://localhost:5173"
+const frontendOrigin = process.env.FRONTEND_ORIGIN || "https://wow-cookies.vercel.app/"
 const databaseUrl = process.env.DATABASE_URL
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -204,5 +204,5 @@ app.get("/api/recommendations/hero", async (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Recommendation backend running on http://localhost:${port} (${mode})`)
+  console.log(`Recommendation backend running on https://wow-cookies.vercel.app:${port} (${mode})`)
 })
