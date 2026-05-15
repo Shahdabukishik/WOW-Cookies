@@ -5,7 +5,7 @@ export const signInWithEmail = (email: string) => {
   return supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: 'http://localhost:5173/',
+      emailRedirectTo: 'https://wow-cookies.vercel.app/',
     },
   })
 }
@@ -14,7 +14,7 @@ export const signInWithGoogle = () => {
   return supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: 'http://localhost:5173/',
+      redirectTo: 'https://wow-cookies.vercel.app/',
     },
   })
 }
