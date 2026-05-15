@@ -4,12 +4,14 @@ import { CheckoutModal } from "@/components/cart/CheckoutModal"
 import EmptyCollectionState from "@/components/common/EmptyCollectionState"
 import { useCart } from "@/hooks/useCart"
 import { useCheckout } from "@/hooks/useCheckout"
+import { useProducts } from "@/hooks/useProducts"
 
 export default function CartPage() {
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [showOrderToast, setShowOrderToast] = useState(false)
   const orderToastTimerRef = useRef<number | null>(null)
   const cart = useCart()
+  const { products } = useProducts()
   const checkout = useCheckout(cart.selectedItems, {
     onSuccess: async () => {
       cart.removeMany(cart.selectedItems.map((item) => item.id))
@@ -35,6 +37,17 @@ export default function CartPage() {
       }
     }
   }, [])
+
+  const addonProducts = products
+    .filter((product) => product.category === "drink")
+    .filter((product) => {
+      const n = product.name.toLowerCase()
+      return n.includes("coffee") || n.includes("milk") || n.includes("قهوة") || n.includes("حليب")
+    })
+    .slice(0, 2)
+
+  const fallbackAddons = products.filter((product) => product.category === "drink").slice(0, 2)
+  const suggestedAddons = addonProducts.length > 0 ? addonProducts : fallbackAddons
 
   if (cart.loading) return <p>جاري التحميل...</p>
 
@@ -68,25 +81,48 @@ export default function CartPage() {
                 onToggleSelection={cart.toggleItemSelection}
               />
 
-              <aside className="cart-summary glass-card">
-                <h2>الملخص</h2>
-                <div className="cart-summary-row">
-                  <span>العناصر المحددة</span>
-                  <strong>{cart.selectedItemsCount}</strong>
-                </div>
-                <div className="cart-summary-row total">
-                  <span>الإجمالي</span>
-                  <strong>{cart.totalPriceLabel}</strong>
-                </div>
-                <button
-                  className="primary-pill full-width"
-                  disabled={!cart.canCheckout}
-                  type="button"
-                  onClick={() => setCheckoutOpen(true)}
-                >
-                  إتمام الطلب
-                </button>
-              </aside>
+              <div className="cart-side-column">
+                <aside className="cart-summary glass-card">
+                  <h2>الملخص</h2>
+                  <div className="cart-summary-row">
+                    <span>العناصر المحددة</span>
+                    <strong>{cart.selectedItemsCount}</strong>
+                  </div>
+                  <div className="cart-summary-row total">
+                    <span>الإجمالي</span>
+                    <strong>{cart.totalPriceLabel}</strong>
+                  </div>
+                  <button
+                    className="primary-pill full-width"
+                    disabled={!cart.canCheckout}
+                    type="button"
+                    onClick={() => setCheckoutOpen(true)}
+                  >
+                    إتمام الطلب
+                  </button>
+                </aside>
+
+                {suggestedAddons.length > 0 ? (
+                  <aside className="cart-addons glass-card">
+                    <h3>أضف مع الطلب</h3>
+                    <p>قهوة أو حليب؟ اختر بسرعة.</p>
+                    <div className="cart-addons-list">
+                      {suggestedAddons.map((product) => (
+                        <article key={product.id} className="cart-addon-item">
+                          <img src={product.image_url || ""} alt={product.name} />
+                          <div>
+                            <strong>{product.name}</strong>
+                            <span>{product.price} ₪</span>
+                          </div>
+                          <button type="button" className="product-action" onClick={() => cart.addToCart(product)}>
+                            + أضف
+                          </button>
+                        </article>
+                      ))}
+                    </div>
+                  </aside>
+                ) : null}
+              </div>
             </div>
           )}
         </div>

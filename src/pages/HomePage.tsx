@@ -87,6 +87,11 @@ export default function HomePage() {
       </section>
 
       <section className="mood-chatbot glass-card mb-4" aria-label="Mood chatbot">
+        <div className="d-flex justify-content-center mb-3">
+          <button className="primary-pill small" type="button" onClick={() => navigate("/wheel")}>
+            لف عجلة الكوكيز
+          </button>
+        </div>
         <div className="mood-grid" role="group" aria-label="Mood selector">
           {moods.map((mood) => (
             <button
