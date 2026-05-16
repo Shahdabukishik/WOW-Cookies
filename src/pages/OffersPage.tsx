@@ -2,10 +2,20 @@ import { ProductCard } from "@/components/ProductCard"
 import EmptyCollectionState from "@/components/common/EmptyCollectionState"
 import { useCart } from "@/hooks/useCart"
 import { useOfferProductsCatalog } from "@/hooks/useProductsCatalog"
+import { trackCurrentUserInteraction } from "@/services/interaction"
+import { useNavigate } from "react-router-dom"
 
 export default function OffersPage() {
   const cart = useCart()
   const { offerProducts, isLoading } = useOfferProductsCatalog()
+  const navigate = useNavigate()
+
+  const handleViewDetails = async (productId: string) => {
+    await trackCurrentUserInteraction(productId, "click", {
+      source: "offers_grid_details",
+      metadata: { page: "offers" },
+    })
+  }
 
   if (isLoading) return <p>Loading...</p>
 
@@ -22,7 +32,14 @@ export default function OffersPage() {
             <div className="row">
               {offerProducts.map((product) => (
                 <div className="col-md-4 mb-3" key={product.id}>
-                  <ProductCard product={product} onAddToCart={cart.addToCart} />
+                  <ProductCard
+                    product={product}
+                    onAddToCart={cart.addToCart}
+                    onViewDetails={(product) => {
+                      void handleViewDetails(product.id)
+                      navigate(`/products/${product.id}`)
+                    }}
+                  />
                 </div>
               ))}
             </div>
@@ -32,4 +49,3 @@ export default function OffersPage() {
     </main>
   )
 }
-
