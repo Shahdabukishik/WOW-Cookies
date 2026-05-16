@@ -15,6 +15,7 @@ import { AdminLayout } from "./features/admin/components/AdminLayout"
 import { AdminProductsPage } from "./features/admin/products/AdminProductsPage"
 import { AdminOrdersPage } from "./features/admin/orders/AdminOrdersPage"
 import { DashboardPage } from "./features/admin/dashboard/DashboardPage"
+import { AdminOffersPage } from "./features/admin/offers/AdminOffersPage"
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Route index element={<DashboardPage />} />
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="orders" element={<AdminOrdersPage />} />
+          <Route path="offers" element={<AdminOffersPage />} />
         </Route>
       </Route>
     </Routes>
