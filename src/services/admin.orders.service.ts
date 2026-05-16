@@ -23,6 +23,21 @@ export const getAllOrders = async () => {
   return data || []
 }
 
-export const updateOrderStatus = async (id: string, status: string) => {
-  return supabase.from("orders").update({ status }).eq("id", id)
+
+export const updateOrderStatus = async (
+  id: string,
+  status: string
+) => {
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ status })
+    .eq("id", id)
+    .select()
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
+
+  return data
 }
