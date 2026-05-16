@@ -9,7 +9,7 @@ export type Product = {
   category: "cookie" | "drink" | "box"
   is_active: boolean
   created_at: string
-  Ingredients:string
+  Ingredients: string
   rating?: number
   sales?: number
 }
@@ -32,9 +32,11 @@ export type Order = {
   phone: string
   fulfillment_method: "delivery" | "pickup"
   created_at: string
-  
+  first_name: string
+  last_name: string
+
 }
- 
+
 export type OrderItem = {
   id: string
   order_id: string
@@ -63,7 +65,7 @@ export type UserProfile = {
 
 export type offers = {
   id: string
-  title: string 
+  title: string
   discount_percentage: number
   is_global: boolean
   start_date: string
@@ -73,6 +75,6 @@ export type offers = {
 
 export type product_offers = {
   id: string
-  product_id: string 
+  product_id: string
   offer_id: string
 }
