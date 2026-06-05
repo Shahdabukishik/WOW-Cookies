@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabaseClient"
+import { rememberSessionInteraction } from "@/services/recommendation-events.service"
 
 
 export const trackInteraction = async (
@@ -8,6 +9,8 @@ export const trackInteraction = async (
   source?: string,
   metadata?: Record<string, unknown>
 ) => {
+  rememberSessionInteraction(productId)
+
   return supabase.from("user_interactions").insert({
     user_id: userId,
     product_id: productId,

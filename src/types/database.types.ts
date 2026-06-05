@@ -14,6 +14,8 @@ export type Product = {
   sales?: number
 }
 
+export type ProductCategory = Product["category"]
+
 export type CartItem = {
   id: string
   user_id: string
@@ -50,9 +52,38 @@ export type Interaction = {
   id: string
   user_id: string
   product_id: string
-  type: "view" | "click"
+  type: "view" | "click" | "add_to_cart"
+  source: string | null
+  metadata: Record<string, unknown> | null
   created_at: string
 }
+
+export type RecommendationEventType = "shown" | "clicked" | "purchased"
+
+export type RecommendationType =
+  | "category_affinity"
+  | "session_affinity"
+  | "similar_users"
+  | "popular_this_week"
+  | "highly_rated"
+  | "new_arrival"
+  | "diverse_pick"
+
+export type RecommendationEvent = {
+  id: string
+  user_id: string
+  recommended_product_id: string
+  event_type: RecommendationEventType
+  created_at: string
+}
+
+export type RecommendationExplanation = {
+  recommendation_reason: string
+  recommendation_type: RecommendationType
+  confidence_score: number
+}
+
+export type RecommendationProduct = Product & RecommendationExplanation
 
 export type UserProfile = {
   id: string

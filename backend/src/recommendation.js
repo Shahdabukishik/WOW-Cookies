@@ -1,8 +1,12 @@
+import { calculateDiversityScore } from "./diversity.js"
+
 const CATEGORY_WEIGHT = 0.35
+const SESSION_WEIGHT = 0.18
 const POPULARITY_WEIGHT = 0.25
 const RATING_WEIGHT = 0.2
 const FRESHNESS_WEIGHT = 0.12
 const NOVELTY_WEIGHT = 0.08
+const DIVERSITY_WEIGHT = 0.1
 
 function eventBaseWeight(type) {
   if (type === "add_to_cart") return 3.2
@@ -75,6 +79,19 @@ function computeCategoryAffinity(userInteractions, userOrders) {
   return normalizeMap(categoryScores)
 }
 
+function computeSessionAffinity(sessionInteractions) {
+  const sessionScores = {}
+
+  sessionInteractions.forEach((row, index) => {
+    const category = row?.products?.category
+    if (!category) return
+    const recencyPositionBoost = 1 + index / Math.max(1, sessionInteractions.length)
+    sessionScores[category] = (sessionScores[category] ?? 0) + recencyPositionBoost * 1.6
+  })
+
+  return normalizeMap(sessionScores)
+}
+
 function computePopularity(products, globalInteractions, globalOrders) {
   const popularityByProduct = {}
   const productIds = new Set(products.map((product) => product.id))
@@ -123,15 +140,27 @@ export function pickRecommendation({
   userOrders,
   globalInteractions,
   globalOrders,
+  sessionInteractions = [],
+  recentRecommendedIds = [],
 }) {
   if (!Array.isArray(products) || products.length === 0) {
     return null
   }
 
   const categoryAffinity = computeCategoryAffinity(userInteractions, userOrders)
+  const sessionAffinity = computeSessionAffinity(sessionInteractions)
   const popularity = computePopularity(products, globalInteractions, globalOrders)
   const seenProducts = interactedSet(userInteractions, userOrders)
-  const isColdStart = Object.keys(categoryAffinity).length === 0 && seenProducts.size === 0
+  const selectedByCategory = {}
+  recentRecommendedIds.forEach((productId) => {
+    const product = products.find((item) => item.id === productId)
+    if (!product) return
+    selectedByCategory[product.category] = (selectedByCategory[product.category] ?? 0) + 1
+  })
+  const isColdStart =
+    Object.keys(categoryAffinity).length === 0 &&
+    Object.keys(sessionAffinity).length === 0 &&
+    seenProducts.size === 0
 
   if (isColdStart) {
     const fallback = coldStartPick(products, popularity)
@@ -145,6 +174,12 @@ export function pickRecommendation({
         ratingScore: scoreRating(fallback.product),
         freshnessScore: scoreFreshness(fallback.product),
         noveltyScore: 1,
+        sessionScore: 0,
+        diversityScore: calculateDiversityScore({
+          product: fallback.product,
+          recentProductIds: recentRecommendedIds,
+          categoryCounts: selectedByCategory,
+        }),
         strategy: "cold_start_trending",
       },
     }
@@ -152,27 +187,37 @@ export function pickRecommendation({
 
   const scored = products.map((product) => {
     const categoryScore = categoryAffinity[product.category] ?? 0
+    const sessionScore = sessionAffinity[product.category] ?? 0
     const popularityScore = popularity[product.id] ?? 0
     const ratingScore = scoreRating(product)
     const freshnessScore = scoreFreshness(product)
     const noveltyScore = seenProducts.has(product.id) ? 0.15 : 1
+    const diversityScore = calculateDiversityScore({
+      product,
+      recentProductIds: recentRecommendedIds,
+      categoryCounts: selectedByCategory,
+    })
 
     const score =
       categoryScore * CATEGORY_WEIGHT +
+      sessionScore * SESSION_WEIGHT +
       popularityScore * POPULARITY_WEIGHT +
       ratingScore * RATING_WEIGHT +
       freshnessScore * FRESHNESS_WEIGHT +
-      noveltyScore * NOVELTY_WEIGHT
+      noveltyScore * NOVELTY_WEIGHT +
+      diversityScore * DIVERSITY_WEIGHT
 
     return {
       product,
       score,
       reasons: {
         categoryScore,
+        sessionScore,
         popularityScore,
         ratingScore,
         freshnessScore,
         noveltyScore,
+        diversityScore,
       },
     }
   })

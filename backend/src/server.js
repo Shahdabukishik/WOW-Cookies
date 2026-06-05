@@ -4,6 +4,7 @@ import express from "express"
 import { Pool } from "pg"
 import { createClient } from "@supabase/supabase-js"
 import { pickRecommendation } from "./recommendation.js"
+import { explainRecommendation } from "./recommendation-explainer.js"
 
 const app = express()
 const port = Number(process.env.PORT || 4000)
@@ -169,6 +170,16 @@ async function loadDataFromSupabase(userId) {
 app.get("/api/recommendations/hero", async (req, res) => {
   try {
     const userId = typeof req.query.user_id === "string" ? req.query.user_id : null
+    const sessionProductIds = Array.isArray(req.query.session_product_id)
+      ? req.query.session_product_id
+      : req.query.session_product_id
+        ? [req.query.session_product_id]
+        : []
+    const recentRecommendedIds = Array.isArray(req.query.recent_recommended_id)
+      ? req.query.recent_recommended_id
+      : req.query.recent_recommended_id
+        ? [req.query.recent_recommended_id]
+        : []
     const data = pool
       ? await loadDataFromPostgres(userId)
       : await loadDataFromSupabase(userId)
@@ -177,23 +188,37 @@ app.get("/api/recommendations/hero", async (req, res) => {
       return res.status(404).json({ message: "No products available for recommendation." })
     }
 
+    const productById = new Map(data.products.map((product) => [product.id, product]))
+    const sessionInteractions = sessionProductIds
+      .map((productId) => productById.get(productId))
+      .filter(Boolean)
+      .map((product) => ({
+        product_id: product.id,
+        products: { category: product.category },
+      }))
+
     const picked = pickRecommendation({
       products: data.products,
       userInteractions: data.userInteractions,
       userOrders: data.userOrders,
       globalInteractions: data.globalInteractions,
       globalOrders: data.globalOrders,
+      sessionInteractions,
+      recentRecommendedIds,
     })
 
     if (!picked) {
       return res.status(404).json({ message: "Could not compute recommendation." })
     }
 
+    const explanation = explainRecommendation(picked.product, picked.score, picked.reasons)
+
     return res.json({
       recommended_product_id: picked.product.id,
       product: picked.product,
       score: Number(picked.score.toFixed(4)),
       reasons: picked.reasons,
+      ...explanation,
       generated_at: new Date().toISOString(),
       mode,
     })
