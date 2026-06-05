@@ -246,6 +246,147 @@
   transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
+.recommendation-card {
+  gap: 0.6rem;
+}
+
+.recommendation-reason {
+  max-width: 34rem;
+  margin: 0;
+}
+
+.recommendation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.recommendation-meta span {
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  color: var(--wow-primary-dark);
+  background: rgba(255, 255, 255, 0.88);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.analytics-page {
+  display: grid;
+  gap: 1.5rem;
+  direction: ltr;
+}
+
+.analytics-header span {
+  color: var(--wow-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.analytics-header h2,
+.analytics-section h3,
+.analytics-chart-card h4 {
+  margin: 0;
+}
+
+.analytics-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.analytics-kpi-grid,
+.analytics-chart-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.analytics-kpi-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.analytics-chart-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.analytics-card,
+.analytics-chart-card {
+  border: 1px solid var(--wow-border);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(46, 32, 25, 0.06);
+}
+
+.analytics-card {
+  --metric-accent: var(--wow-primary-dark);
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  overflow: hidden;
+  padding: 1rem;
+  text-align: right;
+}
+
+.analytics-card::before {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 0.35rem;
+  content: "";
+  background: var(--metric-accent);
+}
+
+.analytics-card-title,
+.analytics-card-helper {
+  color: var(--wow-muted);
+}
+
+.analytics-card-title {
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.analytics-card strong {
+  color: var(--metric-accent);
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  line-height: 1.2;
+}
+
+.analytics-card-helper,
+.analytics-card-formula {
+  line-height: 1.6;
+}
+
+.analytics-card-formula {
+  display: block;
+  margin-top: 0.2rem;
+  padding-top: 0.55rem;
+  color: var(--wow-primary-dark);
+  border-top: 1px solid var(--wow-border);
+  font-weight: 800;
+}
+
+.analytics-chart-card {
+  display: grid;
+  gap: 1rem;
+  min-height: 340px;
+  padding: 1rem;
+}
+
+.analytics-chart-wide {
+  grid-column: 1 / -1;
+}
+
+.analytics-empty {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+  margin: 0;
+  color: var(--wow-muted);
+  background: var(--wow-surface-tint);
+  border-radius: 8px;
+}
+
 .mood-chatbot {
   padding: clamp(1rem, 3vw, 1.4rem);
   background: linear-gradient(125deg, rgba(255, 255, 255, 0.95), rgba(244, 235, 227, 0.85));

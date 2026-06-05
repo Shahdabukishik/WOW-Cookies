@@ -6,6 +6,10 @@ import {
   type FulfillmentMethod,
   type SubmitOrderPayload,
 } from "@/services/order.service"
+import {
+  getRecentRecommendedProductIds,
+  trackRecommendationEvent,
+} from "@/services/recommendation-events.service"
 
 export type CheckoutFormValues = {
   firstName: string
@@ -94,6 +98,14 @@ export const useCheckout = (
       }
 
       const order = await submitOrder(buildPayload(user.id))
+      const recommendedIds = new Set(getRecentRecommendedProductIds())
+      await Promise.all(
+        selectedItems
+          .filter((item) => recommendedIds.has(item.productId))
+          .map((item) =>
+            trackRecommendationEvent(item.productId, "purchased").catch(() => undefined),
+          ),
+      )
       setSubmitted(true)
       setFormValues(initialFormValues)
       await onSuccess?.()
@@ -104,7 +116,7 @@ export const useCheckout = (
     } finally {
       setSubmitting(false)
     }
-  }, [buildPayload, canSubmit, onSuccess])
+  }, [buildPayload, canSubmit, onSuccess, selectedItems])
 
   return {
     formValues,

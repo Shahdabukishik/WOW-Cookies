@@ -13,6 +13,7 @@ export const AdminLayout = () => {
           <li><Link className="nav-link text-white" to="/admin/products">المنتجات</Link></li>
           <li><Link className="nav-link text-white" to="/admin/orders">الطلبات</Link></li>
           <li><Link className="nav-link text-white" to="/admin/offers">العروض</Link></li>
+          <li><Link className="nav-link text-white" to="/admin/analytics">التحليلات</Link></li>
         </ul>
       </div>
 

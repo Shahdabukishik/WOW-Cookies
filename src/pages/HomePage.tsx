@@ -4,10 +4,16 @@ import { useTopRated } from "../hooks/useTopRated"
 import { useMostSelling } from "../hooks/useMostSelling"
 import { useOffers } from "../hooks/useOffers"
 import { ProductCard } from "@/components/ProductCard"
+import { HeroRecommendationCard } from "@/components/recommendation/HeroRecommendationCard"
 import { useCart } from "@/hooks/useCart"
 import { fetchHeroRecommendation } from "@/services/recommendation.service"
+import {
+  rememberRecommendedProduct,
+  trackRecommendationEvent,
+} from "@/services/recommendation-events.service"
 import { trackCurrentUserInteraction } from "@/services/interaction"
-import type { Product } from "@/types/database.types"
+import type { Product, RecommendationProduct } from "@/types/database.types"
+import { generateRecommendationExplanation } from "@/utils/recommendation-explainer"
 import { useNavigate } from "react-router-dom"
 
 export default function HomePage() {
@@ -17,7 +23,7 @@ export default function HomePage() {
   const topRated = useTopRated(products)
   const mostSelling = useMostSelling(products)
   const offers = useOffers()
-  const [recommendedProduct, setRecommendedProduct] = useState<Product | null>(null)
+  const [recommendedProduct, setRecommendedProduct] = useState<RecommendationProduct | null>(null)
   const moods = [
     { key: "very_sad", emoji: "😭", label: "very sad" },
     { key: "sad", emoji: "😢", label: "sad" },
@@ -26,7 +32,18 @@ export default function HomePage() {
     { key: "very_happy", emoji: "🤩", label: "very happy" },
   ]
 
-  const recommendation = recommendedProduct ?? products[1] ?? products[0]
+  const fallbackRecommendation = products[1] ?? products[0]
+  const recommendation =
+    recommendedProduct ??
+    (fallbackRecommendation
+      ? {
+          ...fallbackRecommendation,
+          ...generateRecommendationExplanation(fallbackRecommendation, 0.45, {
+            popularityScore: 0.5,
+            strategy: "cold_start_trending",
+          }),
+        }
+      : null)
 
   useEffect(() => {
     let mounted = true
@@ -50,6 +67,8 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!recommendation?.id) return
+    rememberRecommendedProduct(recommendation.id)
+    void trackRecommendationEvent(recommendation.id, "shown").catch(() => undefined)
     void trackCurrentUserInteraction(recommendation.id, "view", {
       source: "home_recommendation",
       metadata: { page: "home", block: "hero_recommendation" },
@@ -66,7 +85,8 @@ export default function HomePage() {
     })
   }
 
-  const handleRecommendationClick = (product: Product) => {
+  const handleRecommendationClick = (product: RecommendationProduct) => {
+    void trackRecommendationEvent(product.id, "clicked").catch(() => undefined)
     void trackCurrentUserInteraction(product.id, "click", {
       source: "home_recommendation_cta",
       metadata: { page: "home", block: "hero_recommendation" },
@@ -124,14 +144,10 @@ export default function HomePage() {
 
         {recommendation && (
           <div className="col-md-6">
-            <div className="offer-card h-100">
-              <div className="offer-badge">لكَ</div>
-              <h5 className="fw-bold mb-2">{recommendation.name}</h5>
-              <p>اخترناه خصيصاً لك </p>
-              <button className=" offer-btn" onClick={() => handleRecommendationClick(recommendation)}>
-                جرّب الآن
-              </button>
-            </div>
+            <HeroRecommendationCard
+              recommendation={recommendation}
+              onClick={handleRecommendationClick}
+            />
           </div>
         )}
       </div>

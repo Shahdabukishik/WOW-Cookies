@@ -16,6 +16,7 @@ import { AdminProductsPage } from "./features/admin/products/AdminProductsPage"
 import { AdminOrdersPage } from "./features/admin/orders/AdminOrdersPage"
 import { DashboardPage } from "./features/admin/dashboard/DashboardPage"
 import { AdminOffersPage } from "./features/admin/offers/AdminOffersPage"
+import { AnalyticsPage } from "./features/admin/analytics/AnalyticsPage"
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="offers" element={<AdminOffersPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
         </Route>
       </Route>
     </Routes>
